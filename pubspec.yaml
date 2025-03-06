@@ -13,6 +13,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   provider: ^6.0.5  # For optional state management if needed
   table_calendar: ^3.0.9  # For calendar support
+  uuid: ^4.5.1
 
 dev_dependencies:
   flutter_test:
