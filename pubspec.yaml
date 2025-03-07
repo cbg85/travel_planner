@@ -1,0 +1,25 @@
+name: adoption_travel_planner
+description: A Flutter app for managing adoption and travel plans with CRUD operations.
+publish_to: 'none'  # Prevents accidental publishing to pub.dev.
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_slidable: ^3.0.0  # For swipe gestures
+  intl: ^0.18.0  # For date formatting
+  table_calendar: ^3.0.9  # For interactive calendar
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^3.0.0
+
+flutter:
+  uses-material-design: true
+
