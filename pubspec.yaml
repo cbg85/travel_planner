@@ -1,4 +1,7 @@
 name: adoption_travel_planner
+description: A new Flutter project.
+
+publish_to: 'none'
 
 version: 1.0.0+1
 
@@ -9,10 +12,28 @@ dependencies:
   flutter:
     sdk: flutter
 
+  provider: ^6.1.2
+  intl: ^0.18.1
+  table_calendar: ^3.0.9
+  flutter_slidable: ^3.0.0
+  uuid: ^4.3.3
+
+  # Use flutter_launcher_icons for Android only
+  flutter_launcher_icons: ^0.13.1
+
+  font_awesome_flutter: ^10.7.0
+  json_annotation: ^4.8.1
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
+  build_runner: ^2.4.7
+  json_serializable: ^6.8.0
 
 flutter:
   uses-material-design: true
+
+flutter_launcher_icons:
+  android: true
+  image_path: "assets/icon/app_icon.png"

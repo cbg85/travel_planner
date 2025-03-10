@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 import '../models/plan.dart';
-import '../widgets/plan_list.dart';
 import '../widgets/create_plan_modal.dart';
-import 'package:table_calendar/table_calendar.dart';
+import '../widgets/plan_list.dart';
 
 class PlanManagerScreen extends StatefulWidget {
   const PlanManagerScreen({super.key});
@@ -12,66 +12,56 @@ class PlanManagerScreen extends StatefulWidget {
 }
 
 class _PlanManagerScreenState extends State<PlanManagerScreen> {
-  List<Plan> plans = [];
-  DateTime _selectedDate = DateTime.now();
+  final List<Plan> _plans = [];
 
   void _addPlan(String name, String description, DateTime date) {
     setState(() {
-      plans.add(Plan(name: name, description: description, date: date));
+      _plans.add(Plan(id: const Uuid().v4(), name: name, description: description, date: date));
     });
   }
 
-  void _updatePlan(int index, String newName, String newDescription) {
+  void _toggleCompletion(String id) {
     setState(() {
-      plans[index].name = newName;
-      plans[index].description = newDescription;
+      final plan = _plans.firstWhere((p) => p.id == id);
+      plan.toggleCompleted();
     });
   }
 
-  void _toggleCompletion(int index) {
+  void _editPlan(String id, String newName, String newDescription, DateTime newDate) {
     setState(() {
-      plans[index].isCompleted = !plans[index].isCompleted;
+      final planIndex = _plans.indexWhere((p) => p.id == id);
+      if (planIndex != -1) {
+        _plans[planIndex] = Plan(
+          id: id,
+          name: newName,
+          description: newDescription,
+          date: newDate,
+          isCompleted: _plans[planIndex].isCompleted,
+        );
+      }
     });
   }
 
-  void _deletePlan(int index) {
+  void _deletePlan(String id) {
     setState(() {
-      plans.removeAt(index);
+      _plans.removeWhere((p) => p.id == id);
     });
+  }
+
+  void _showCreatePlanDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => CreatePlanModal(onAddPlan: _addPlan),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Adoption & Travel Planner')),
-      body: Column(
-        children: [
-          TableCalendar(
-            focusedDay: _selectedDate,
-            firstDay: DateTime(2000),
-            lastDay: DateTime(2100),
-            selectedDayPredicate: (day) => isSameDay(_selectedDate, day),
-            onDaySelected: (selectedDay, focusedDay) {
-              setState(() {
-                _selectedDate = selectedDay;
-              });
-            },
-          ),
-          Expanded(
-            child: PlanList(
-              plans: plans,
-              onToggleComplete: _toggleCompletion,
-              onUpdate: _updatePlan,
-              onDelete: _deletePlan,
-            ),
-          ),
-        ],
-      ),
+      appBar: AppBar(title: const Text("Adoption & Travel Planner")),
+      body: PlanList(plans: _plans, onToggle: _toggleCompletion, onDelete: _deletePlan, onEdit: _editPlan),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => showDialog(
-          context: context,
-          builder: (context) => CreatePlanModal(onSubmit: _addPlan),
-        ),
+        onPressed: _showCreatePlanDialog,
         child: const Icon(Icons.add),
       ),
     );
